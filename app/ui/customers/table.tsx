@@ -9,6 +9,7 @@ import {
  
 import {CreateCustomerButton, UpdateCustomerButton, DeleteCustomerButton} from '@/app/ui/customers/button';
 import { fetchCustomers, fetchFilteredCustomers } from '@/app/lib/data';
+import { createRef } from 'react';
  
 export default async function CustomersTable({ 
   data,query, currentPage,
@@ -20,10 +21,10 @@ export default async function CustomersTable({
 
   //const customers = await fetchCustomers();
  
-  console.log(query);
+  console.log(query,'query tbl');
   
-  const customers = await fetchFilteredCustomers(query);
-   
+  const customers = await fetchFilteredCustomers(query, currentPage); 
+     
   return (
     <div className="w-full">
       {/* <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
@@ -35,7 +36,7 @@ export default async function CustomersTable({
         <CreateCustomerButton />
       </div> */}
 
-      <div className="mt-6 flow-root">
+      <div  id="customerTbl"  className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
@@ -103,7 +104,7 @@ export default async function CustomersTable({
                     
                       <td className="flex bg-white justify-end gap-2 mt-3 mr-3">
                           <UpdateCustomerButton id= {customer.id} />
-                          <DeleteCustomerButton id= {customer.id} />
+                          <DeleteCustomerButton customer= {customer} />
                       </td>
                     </tr>
                   ))}

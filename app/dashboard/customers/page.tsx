@@ -4,9 +4,10 @@ import { TableCellsIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts'; 
 import { CustomerSkeleton } from '@/app/ui/skeletons';
 import CustomersTable from '@/app/ui/customers/table';
-import { fetchCustomers, fetchFilteredCustomers } from '@/app/lib/data';
+import  { fetchCustomers, fetchCustomerPages, fetchFilteredCustomers } from '@/app/lib/data';
 import Search from '@/app/ui/search';
 import { CreateCustomerButton } from '@/app/ui/customers/button';
+import Pagination from '@/app/ui/customers/pagination';
 
 export const metadata:Metadata={
   title: {
@@ -23,10 +24,11 @@ export default async function CustomerPage({searchParams}:{searchParams?:{
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
 
-  console.log(query);
+  console.log(query,'query');
 
-  const data = await fetchFilteredCustomers(query);
-  
+  const data = await fetchFilteredCustomers(query, currentPage); 
+   const totalPages = await fetchCustomerPages(query);
+   
   // fetch customer list
   // const customerList = await fetchCustomers(); 
 
@@ -43,7 +45,9 @@ export default async function CustomerPage({searchParams}:{searchParams?:{
        <Suspense key={query + currentPage}  fallback={<CustomerSkeleton />}>
            <CustomersTable data={data} query={query} currentPage={currentPage} />  
        </Suspense>
-        
+       <div className='flex justify-center mt-5 w-full'>
+          <Pagination totalPages={totalPages} />
+       </div>
       </div>
     )
 };
